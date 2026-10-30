@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Observers\LaporanObserver;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['distribusi_id', 'user_id', 'deskripsi', 'bukti', 'status'])]
+#[ObservedBy(LaporanObserver::class)]
 class Laporan extends Model
 {
     public function distribusi(): BelongsTo
