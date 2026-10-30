@@ -11,13 +11,13 @@ class LaporanPolicy
     public function view(User $user, Laporan $laporan): bool
     {
         return $user->id === $laporan->user_id
-            || $user->isPemantau()
+            || $user->isMonitor()
             || $user->isKoordinator();
     }
 
     public function create(User $user): bool
     {
-        return $user->isPelapor();
+        return $user->isReporter();
     }
 
     public function update(User $user, Laporan $laporan): bool
@@ -26,6 +26,6 @@ class LaporanPolicy
             return $laporan->status === 'baru';
         }
 
-        return $user->isPemantau() || $user->isKoordinator();
+        return $user->isMonitor() || $user->isKoordinator();
     }
 }

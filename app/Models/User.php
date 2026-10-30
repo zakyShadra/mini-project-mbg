@@ -18,7 +18,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $attributes = [
-        'role' => 'pelapor',
+        'role' => 'reporter',
     ];
 
     public function laporans(): HasMany
@@ -26,14 +26,14 @@ class User extends Authenticatable
         return $this->hasMany(Laporan::class);
     }
 
-    public function isPelapor(): bool
+    public function isReporter(): bool
     {
-        return $this->role === 'pelapor';
+        return $this->role === 'reporter';
     }
 
-    public function isPemantau(): bool
+    public function isMonitor(): bool
     {
-        return $this->role === 'pemantau';
+        return $this->role === 'monitor';
     }
 
     public function isKoordinator(): bool
