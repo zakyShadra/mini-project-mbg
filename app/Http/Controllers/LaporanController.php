@@ -20,9 +20,15 @@ class LaporanController extends Controller
 
     public function index(Request $request): View
     {
-        $laporans = $request->user()->isReporter()
-            ? Laporan::where('user_id', $request->user()->id)->latest()->get()
-            : Laporan::latest()->get();
+        $query = $request->user()->isReporter()
+            ? Laporan::where('user_id', $request->user()->id)
+            : Laporan::query();
+
+        $query->when($request->filled('status'), fn ($q) => $q->where('status', $request->string('status')))
+            ->when($request->filled('distribusi_id'), fn ($q) => $q->where('distribusi_id', $request->integer('distribusi_id')))
+            ->when($request->filled('q'), fn ($q) => $q->where('deskripsi', 'like', '%'.$request->string('q').'%'));
+
+        $laporans = $query->latest()->paginate(10)->withQueryString();
 
         return view('laporans.index', ['laporans' => $laporans]);
     }
