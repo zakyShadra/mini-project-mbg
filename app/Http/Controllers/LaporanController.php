@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReviewLaporanRequest;
 use App\Http\Requests\StoreLaporanRequest;
 use App\Http\Requests\UpdateLaporanRequest;
 use App\Models\Laporan;
+use App\Services\LaporanService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -14,6 +16,8 @@ use Illuminate\View\View;
 
 class LaporanController extends Controller
 {
+    public function __construct(private LaporanService $laporanService) {}
+
     public function index(Request $request): View
     {
         $laporans = $request->user()->isReporter()
@@ -60,5 +64,12 @@ class LaporanController extends Controller
         $laporan->update($data);
 
         return Redirect::route('laporans.show', $laporan)->with('status', 'laporan-updated');
+    }
+
+    public function review(ReviewLaporanRequest $request, Laporan $laporan): RedirectResponse
+    {
+        $this->laporanService->review($laporan, $request->validated());
+
+        return Redirect::route('laporans.show', $laporan)->with('status', 'laporan-reviewed');
     }
 }
