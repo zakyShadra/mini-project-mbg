@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['distribusi_id', 'user_id', 'deskripsi', 'bukti', 'status'])]
+#[Fillable(['distribusi_id', 'user_id', 'deskripsi', 'bukti', 'status', 'catatan', 'ditandai', 'forwarded_to', 'forwarded_at'])]
 #[ObservedBy(LaporanObserver::class)]
 class Laporan extends Model
 {
