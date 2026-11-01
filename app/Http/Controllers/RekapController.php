@@ -18,7 +18,7 @@ class RekapController extends Controller
             ));
 
         $totalLaporan = (clone $query)->count();
-        $laporanDiproses = (clone $query)->whereIn('status', ['baru', 'ditinjau'])->count();
+        $laporanDiproses = (clone $query)->where('status', '!=', 'selesai')->count();
         $laporanSelesai = (clone $query)->where('status', 'selesai')->count();
 
         $rekapPerSekolah = Sekolah::query()
