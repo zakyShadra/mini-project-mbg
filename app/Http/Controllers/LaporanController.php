@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ReviewLaporanRequest;
 use App\Http\Requests\StoreLaporanRequest;
 use App\Http\Requests\UpdateLaporanRequest;
+use App\Models\Distribusi;
 use App\Models\Laporan;
+use App\Models\Sekolah;
 use App\Services\LaporanService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +32,11 @@ class LaporanController extends Controller
 
         $laporans = $query->latest()->paginate(10)->withQueryString();
 
-        return view('laporans.index', ['laporans' => $laporans]);
+        return view('laporans.index', [
+            'laporans' => $laporans,
+            'sekolahs' => $request->user()->isReporter() ? Sekolah::orderBy('nama_sekolah')->get() : collect(),
+            'distribusis' => $request->user()->isReporter() ? Distribusi::with('sekolah')->latest('tanggal')->get() : collect(),
+        ]);
     }
 
     public function store(StoreLaporanRequest $request): RedirectResponse
