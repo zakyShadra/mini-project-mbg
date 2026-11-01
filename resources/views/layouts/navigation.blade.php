@@ -15,6 +15,11 @@
                     <x-nav-link :href="route('laporans.index')" :active="request()->routeIs('laporans.index')">
                         {{ __('Laporan') }}
                     </x-nav-link>
+                    @if (auth()->user()->isMonitor() || auth()->user()->isKoordinator())
+                        <x-nav-link :href="route('rekap.index')" :active="request()->routeIs('rekap.index')">
+                            {{ __('Rekap') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 

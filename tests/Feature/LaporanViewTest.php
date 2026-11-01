@@ -54,4 +54,21 @@ class LaporanViewTest extends TestCase
 
         $response->assertOk()->assertJsonFragment(['menu' => 'Nasi Ayam']);
     }
+
+    public function test_koordinator_can_view_rekap(): void
+    {
+        [, $laporan] = $this->makeLaporan();
+        $koordinator = User::factory()->create(['role' => 'koordinator']);
+
+        $this->actingAs($koordinator)->get(route('rekap.index'))
+            ->assertOk()
+            ->assertSee($laporan->distribusi->sekolah->nama_sekolah);
+    }
+
+    public function test_reporter_cannot_view_rekap(): void
+    {
+        [$user] = $this->makeLaporan();
+
+        $this->actingAs($user)->get(route('rekap.index'))->assertForbidden();
+    }
 }
