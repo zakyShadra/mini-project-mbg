@@ -45,4 +45,13 @@ class LaporanViewTest extends TestCase
         $this->actingAs($monitor)->get(route('laporans.index'))->assertOk();
         $this->actingAs($monitor)->get(route('laporans.show', $laporan))->assertOk();
     }
+
+    public function test_distribusi_lookup_returns_json_for_sekolah(): void
+    {
+        [$user, $laporan] = $this->makeLaporan();
+
+        $response = $this->actingAs($user)->getJson(route('sekolahs.distribusis', $laporan->distribusi->sekolah));
+
+        $response->assertOk()->assertJsonFragment(['menu' => 'Nasi Ayam']);
+    }
 }

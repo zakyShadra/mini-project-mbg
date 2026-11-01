@@ -16,14 +16,18 @@
                     <form method="POST" action="{{ route('laporans.store') }}" enctype="multipart/form-data" class="space-y-4">
                         @csrf
                         <div>
+                            <x-input-label for="sekolah_id" :value="__('Sekolah')" />
+                            <select id="sekolah_id" class="block mt-1 w-full border-gray-300 rounded-md">
+                                <option value="">-- pilih sekolah --</option>
+                                @foreach ($sekolahs as $sekolah)
+                                    <option value="{{ $sekolah->id }}">{{ $sekolah->nama_sekolah }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
                             <x-input-label for="distribusi_id" :value="__('Distribusi')" />
                             <select id="distribusi_id" name="distribusi_id" class="block mt-1 w-full border-gray-300 rounded-md" required>
-                                <option value="">-- pilih distribusi --</option>
-                                @foreach ($distribusis as $distribusi)
-                                    <option value="{{ $distribusi->id }}" @selected(old('distribusi_id') == $distribusi->id)>
-                                        {{ $distribusi->sekolah->nama_sekolah }} — {{ $distribusi->menu }} ({{ $distribusi->tanggal->format('d M Y') }})
-                                    </option>
-                                @endforeach
+                                <option value="">-- pilih sekolah dulu --</option>
                             </select>
                             <x-input-error :messages="$errors->get('distribusi_id')" class="mt-2" />
                         </div>
@@ -40,6 +44,41 @@
                         <x-primary-button>{{ __('Kirim Laporan') }}</x-primary-button>
                     </form>
                 </div>
+
+                <script>
+                    document.getElementById('sekolah_id').addEventListener('change', async function (event) {
+                        const distribusiSelect = document.getElementById('distribusi_id');
+                        const sekolahId = event.target.value;
+
+                        distribusiSelect.innerHTML = '<option value="">-- memuat... --</option>';
+
+                        if (!sekolahId) {
+                            distribusiSelect.innerHTML = '<option value="">-- pilih sekolah dulu --</option>';
+                            return;
+                        }
+
+                        try {
+                            const response = await fetch(`/sekolahs/${sekolahId}/distribusis`);
+
+                            if (!response.ok) {
+                                distribusiSelect.innerHTML = '<option value="">-- gagal memuat distribusi --</option>';
+                                return;
+                            }
+
+                            const distribusis = await response.json();
+
+                            if (distribusis.length === 0) {
+                                distribusiSelect.innerHTML = '<option value="">-- belum ada distribusi --</option>';
+                                return;
+                            }
+
+                            distribusiSelect.innerHTML = '<option value="">-- pilih distribusi --</option>' +
+                                distribusis.map(d => `<option value="${d.id}">${d.menu} (${d.tanggal.substring(0, 10)})</option>`).join('');
+                        } catch (error) {
+                            distribusiSelect.innerHTML = '<option value="">-- gagal memuat distribusi --</option>';
+                        }
+                    });
+                </script>
             @endif
 
             <div class="bg-white shadow sm:rounded-lg p-6">

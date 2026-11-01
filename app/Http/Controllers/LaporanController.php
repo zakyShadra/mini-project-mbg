@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ReviewLaporanRequest;
 use App\Http\Requests\StoreLaporanRequest;
 use App\Http\Requests\UpdateLaporanRequest;
-use App\Models\Distribusi;
 use App\Models\Laporan;
 use App\Models\Sekolah;
 use App\Services\LaporanService;
@@ -35,7 +34,6 @@ class LaporanController extends Controller
         return view('laporans.index', [
             'laporans' => $laporans,
             'sekolahs' => $request->user()->isReporter() ? Sekolah::orderBy('nama_sekolah')->get() : collect(),
-            'distribusis' => $request->user()->isReporter() ? Distribusi::with('sekolah')->latest('tanggal')->get() : collect(),
         ]);
     }
 
