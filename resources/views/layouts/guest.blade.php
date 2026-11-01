@@ -22,8 +22,19 @@
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+            <div class="mt-6 flex flex-col md:flex-row items-center md:items-start justify-center gap-6 w-full max-w-4xl px-4">
+                <div class="w-full sm:max-w-md px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+                    {{ $slot }}
+                </div>
+
+                <div class="w-full sm:max-w-md md:w-72 bg-white shadow-md overflow-hidden sm:rounded-lg p-5 border border-gray-100">
+                    <h3 class="font-semibold text-gray-800 text-sm mb-3">Akun Demo</h3>
+                    <div class="space-y-2 text-sm text-gray-700">
+                        <div>Reporter: zaky</div>
+                        <div>Monitor: shadra</div>
+                        <div>Koordinator: ice</div>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
